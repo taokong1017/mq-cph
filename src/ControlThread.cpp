@@ -489,6 +489,7 @@ unsigned int ControlThread::getThreadStats(std::vector<unsigned int> &stats) con
 
   for(std::vector<WorkerThread *>::const_iterator it = workers.begin(); it != workers.end(); ++it)
     stats.push_back((*it)->getIterations());
+    workers[0]->getLatencyStats();
 
   CPHTRACEEXIT(pConfig->pTrc)
   return runningWorkers;

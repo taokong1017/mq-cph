@@ -73,6 +73,7 @@ void cphUtilSleep( int mSecs );
 CPH_TIME cphUtilGetNow(void);
 int cphUtilTimeIni(CPH_TIME *pTime);
 long cphUtilGetTimeDifference(CPH_TIME time1, CPH_TIME time2);
+long cphUtilGetUsTimeDifference(CPH_TIME time1, CPH_TIME time2);
 int cphUtilTimeCompare(CPH_TIME time1, CPH_TIME time2);
 void cphCopyTime(CPH_TIME *pTimeDst, CPH_TIME *pTimeSrc);
 int cphUtilTimeIsZero(CPH_TIME pTime);

@@ -116,6 +116,18 @@ private:
   CPH_TIME startTime;
   /*The time when the thread completes execution.*/
   CPH_TIME endTime;
+  
+  /*PH1*/
+  long maxLatency;
+  long minLatency;
+  long avgLatency;
+  long latencyIter;
+  /*PH1*/
+  CPH_TIME latencyStartTime;
+  CPH_TIME latencyStopTime;
+  long latency;
+
+  
   /*A pointer to the control thread that created this WorkerThread.*/
   ControlThread * const pControlThread;
 
@@ -183,6 +195,7 @@ public:
   virtual ~WorkerThread();
   unsigned int getState() const;
   unsigned int getIterations() const;
+  unsigned int getLatencyStats();
   CPH_TIME getStartTime() const;
   CPH_TIME getEndTime() const;
 };

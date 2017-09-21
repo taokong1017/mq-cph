@@ -196,6 +196,10 @@ void WorkerThread::run(){
     state |= S_RUNNING;
     pControlThread->incRunners();
     startTime = cphUtilGetNow();
+	
+	minLatency=999999999999;
+	maxLatency=0;
+	latencyIter=0;
 
     pace();
 
@@ -256,7 +260,22 @@ void WorkerThread::run(){
 
 inline bool WorkerThread::doOneIteration(unsigned int& its){
   if(shutdown) return false;
+  
+  if(threadNum==0) latencyStartTime = cphUtilGetNow();
   oneIteration();
+  if(threadNum==0) {
+     latencyStopTime = cphUtilGetNow();
+     latency=cphUtilGetUsTimeDifference(latencyStopTime,latencyStartTime);  
+     //printf("Latency: %d\n",latency);
+     if(latency > maxLatency)maxLatency= latency;
+     if(latency < minLatency)minLatency= latency;
+     if(latencyIter == 0){ 
+	    avgLatency = latency; 
+     } else {
+	    avgLatency = ((avgLatency * latencyIter) + latency) / (latencyIter+1);
+     } 	  
+     latencyIter++;
+  }
   iterations++;
   if(++its==messages) return false;
   if (yieldRate!=0 && its%yieldRate==0)
@@ -516,6 +535,18 @@ unsigned int WorkerThread::getState() const {
  */
 unsigned int WorkerThread::getIterations() const {
   return iterations;
+}
+
+unsigned int WorkerThread::getLatencyStats() {
+  int ret=-1;
+  if(threadNum==0){
+     printf("Avg latency (μs): %d, Max Latency (μs): %d, Min latency (μs): %d\n",avgLatency,maxLatency,minLatency);
+	 ret=avgLatency;
+     minLatency=999999999999;
+     maxLatency=0;
+     latencyIter=0;
+  } 
+  return ret;
 }
 
 /**
